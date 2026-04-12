@@ -1,0 +1,270 @@
+Sacha Rozencwajg
+I would like to write a scientific manuscript about the fact that it is now possible for physicians to create the tools they want using “vibe code”. The article should be about the following competence: a physician without any prior coding experience can create the tool they want as long as they can “prompt” it well. I will name it “physician prompt engineering”. 
+
+For this purpose, I would like to code a web application (locally, not something very complex) to help me with a very specific task in my daily work as an anesthesiologist-intensivist. I want to demonstrate that I can do this with Antigravity in literally 5 minutes with a single well-structured prompt. I want it to have a strong effect on how people perceive app development and vibecoding technologies. I will use Antigravity and Claude Opus 4.6.
+
+Topic/focus : anesthesiology and/or intensive care medicine. Useful for personalized medicine. Like what MDCalc proposes (search the web) but tailored to the physician’s own need.
+
+I would like us to think and discuss together.
+Take your time, do an analysis not only of "what" but also of "how." Because today, the only format that exists is flat, printed articles published in a traditional way. I think recording the “live-session” would be a good thing.
+Claude
+Before writing a single line of the prompt, we need to precisely define the clinical scope of the tool — because the clinical thinking before the prompt is the real subject of the paper. 
+Three quick questions to frame this:
+ 
+Q: What is the precise clinical context for the tool?
+Q: Which metrics should be at the core of the tool?
+Q: What is the moment of use — when does the physician open the app?
+Sacha Rozencwajg
+Q: What is the precise clinical context for the tool?
+A: Medical ARDS in the ICU
+ 
+Q: Which metrics should be at the core of the tool? (Select all that apply)
+A: Mechanical power, Driving pressure (Pplat - PEEP), Predicted body weight + Vt 6 mL/kg, P/F ratio and oxygenation
+ 
+Q: What is the moment of use — when does the physician open the app?
+A: At ICU admission (initial ventilator setup)
+Claude
+Excellent. Medical ARDS at admission — this is the most clinically loaded and most universal scenario.
+All four metrics, that's ambitious but coherent: it's precisely what no commercial tool does in an integrated way.
+ 
+Before writing the prompt, let me lay out the clinical reasoning that will structure it — because
+this layer of thinking needs to be visible in the prompt, and therefore in the paper.
+ 
+The clinical logic of the tool — what we encode
+ 
+At ARDS admission, the physician must simultaneously:
+ 1. Calculate the predicted ideal weight (PBW) — height + sex, Devine formula — to never use actual weight
+2. Set initial Vt to 6 mL/kg PBW, tolerance to go down to 4 if necessary
+3. Verify Pplat < 30 cmH₂O
+4. Calculate driving pressure = Pplat − PEEP, target < 15 cmH₂O
+   — this is the most robust mortality predictor (Amato, NEJM 2015)
+5. Calculate mechanical power = 0.098 × RR × Vt × (Pplat − PEEP/2) — target < 17 J/min
+6. Classify severity via P/F (Berlin): mild >200, moderate 100-200, severe <100
+   → conditions the prone and paralysis decision
+7. Generate a contextual recommendation — not a generic score, but a synthesis:
+   'are these settings protective? what needs adjusting?'
+ 
+What MDCalc never does: the synthesis of all 7 layers together, with integrated decision logic
+and a real-time visualisation of the 'danger zone'.
+ 
+Prompt architecture — the structure in 6 blocks
+ 
+A vibe coding prompt for an ICM paper cannot be a casual prompt. It must be readable like a protocol, annotated, and reproducible. Here is the structure I propose, then we will draft it block by block.
+ 
+[BLOCK 1] — Context & role assigned to the LLM
+[BLOCK 2] — Precise definition of the target user
+[BLOCK 3] — Functional specifications (what the app does)
+[BLOCK 4] — Calculation specifications (the exact formulas)
+[BLOCK 5] — UX/UI specifications (what the physician sees)
+[BLOCK 6] — Technical constraints & safety
+ 
+The golden rule: each block must be clinically justifiable. This is not 'make me a nice interface'
+— it's 'here is why each parameter exists'.
+The next decision : There’s an important variation to settle before we start: do you want the app to be a purely static calculator (as I described), or do you want to add an active suggestion layer — for example, if the driving pressure (DP) is too high, the app would automatically propose the tidal volume (Vt) needed to bring DP below 15 while keeping the plateau pressure (Pplat) constant?
+This second option is more visually and clinically impressive — it transforms the tool from a “calculator” into a “titration assistant.” But it makes the prompt and the demo slightly more complex.
+What do you want?
+Sacha Rozencwajg
+Active suggestion layer 
+Claude
+Noted — I correct this in the prompt and in memory.
+ 
+Good. The active layer fundamentally changes the nature of the tool — we go from a mirror
+(here is where you are) to a co-pilot (here is what you should do). This is exactly the personalised medicine argument needed.
+ 
+The active suggestion logic — what we calculate in reverse
+ 
+When an alert fires, the app doesn't just say 'it's red'. It solves the problem backwards:
+ 
+If DP > 15 (Pplat too high for current PEEP):
+→ Computes the max Vt that would bring DP ≤ 14 keeping PEEP fixed
+→ Verifies this Vt remains ≥ 4 mL/kg PBW (safety floor)
+→ Displays: 'To bring DP to 14 cmH₂O: reduce Vt to XXX mL (= X.X mL/kg PBW)'
+ 
+If Vt > 6 mL/kg PBW but DP acceptable:
+→ Computes the exact target Vt at 6 mL/kg PBW
+→ Displays: 'Protective target Vt: XXX mL — reduction of YY mL from current setting'
+ 
+If MP > 17 J/min:
+→ Identifies the most effective lever: RR or Vt?
+→ Computes max RR to stay under 17 J/min at constant Vt
+→ Computes max Vt to stay under 17 J/min at constant RR
+→ Displays both options: 'Option 1: reduce RR to XX/min | Option 2: reduce Vt to XXX mL'
+ 
+If severe ARDS (P/F < 100):
+→ Automatically triggers a decision banner:
+  'SEVERE ARDS — discuss: prone positioning, paralysis, ECMO referral based on evolution'
+ 
+It's this last layer — decisions beyond the ventilator — that transforms the tool into something
+no physical calculator does. And it's reproducible in one prompt because you know exactly what to encode.
+Sacha Rozencwajg
+Just one question.
+ 
+You wrote: 'What the interface does: the cards turn orange/red in real time as you type.
+DP displays at 20 cmH₂O — DANGER. Estimated P/F drops to 85 — SEVERE ARDS banner lights up red full width.'
+But how is P/F calculated? From SpO₂?
+ 
+1) some will say you should always calculate it at FiO₂ = 100% (to remove certain shunt effects — read the papers I just uploaded and search papers on this) 
+2) shouldn't you need an arterial blood gas?
+Claude
+Excellent clinical objection — and this is exactly the kind of question a reviewer will raise.
+Let's dig into this seriously.
+ 
+The literature is very clear on this — and your question actually raises three distinct problems
+that deserve to be separated properly.
+ 
+──────────────────────────────────────────────────────────
+THE THREE PROBLEMS OF P/F IN YOUR TOOL
+──────────────────────────────────────────────────────────
+ 
+PROBLEM 1 — P/F is not independent of FiO₂ (your question about FiO₂ 100%)
+ 
+The P/F ratio varies according to the FiO₂ used to calculate it: with the same intrapulmonary
+shunt, increasing FiO₂ decreases P/F — which can classify a patient as more severe ARDS
+even though their gas exchange is unchanged. A study on COVID ARDS patients showed that
+FiO₂ = 1.0 gave the best agreement with classification based on actual shunt calculated
+by Swan-Ganz oximetry. In other words: those who say 'calculate at FiO₂ 100% to remove shunt effects' have solid physiological grounds — but this is not what Berlin does in practice. P/F varies according to the degree of shunt present: increasing FiO₂ raises P/F if shunt is small, but lowers it if shunt is large. P/F reflects neither oxygen content of blood nor tissue O₂ delivery.
+ 
+Consequence for your tool: P/F is contextually dependent on the FiO₂ entered by the user. This is a real limitation — but it is also the limitation of all existing tools, including Berlin. You document it, you don't hide it.
+ 
+PROBLEM 2 — SpO₂ vs PaO₂: are they interchangeable?
+ 
+SpO₂/FiO₂ is determined primarily by FiO₂ settings rather than by the measured SpO₂ — increasing FiO₂ lowers the SpO₂/FiO₂ ratio despite unchanged gas exchange. The correlation of SpO₂ to FiO₂ changes is weak (r = 0.42), versus r = 0.88 for PaO₂. The two ratios must not be used interchangeably. But the important nuance: the SpO₂/FiO₂ ratio with thresholds of 146, 236, and 296 corresponds to the P/F thresholds of 100, 200, and 300 — with AUC ROC of 0.98, 0.95 and 0.95 respectively for ARDS diagnosis.
+ 
+What this means concretely: SpO₂/FiO₂ classifies ARDS well in terms of mortality, but is not calculated like P/F. They are two different indices with different thresholds.
+ 
+PROBLEM 3 — Is arterial blood gas strictly required?
+ 
+PaO₂/FiO₂ remains the gold standard for diagnosis of acute respiratory failure. SpO₂/FiO₂ is a validated substitute mainly in resource-limited settings or for continuous monitoring — with good diagnostic performance when SpO₂ is between 80 and 97%.  In your context (medical ARDS at admission in the ICU at Marie Lannelongue): an arterial blood gas will be quasi-systematically available at admission. SpO₂ as fallback is legitimate but must be clearly signaled as an estimate.
+
+──────────────────────────────────────────────────────────
+HOW TO ADDRESS THIS IN THE PROMPT AND THE PAPER
+──────────────────────────────────────────────────────────
+ 
+We need three distinct calculation levels, hierarchised, not a simple SpO₂→PaO₂ estimation.
+ 
+Level 1 — Classic P/F (Berlin gold standard)
+If PaO₂ available (ABG) → PF = PaO₂ / (FiO₂ / 100)
+Display: direct Berlin classification, no disclaimer.
+ 
+Level 2 — S/F ratio (validated substitute, different thresholds)
+If PaO₂ absent but SpO₂ available → compute S/F = SpO₂ / FiO₂ with corrected thresholds:
+  SF < 146  → Severe ARDS equivalent
+  SF 146-236 → Moderate ARDS equivalent
+  SF 236-296 → Mild ARDS equivalent
+Display: 'S/F ratio [value] — Severe/Moderate/Mild ARDS equivalent (SpO₂-based estimate, ABG recommended)'
+ 
+Level 3 — FiO₂-dependence disclaimer
+Whatever the calculation mode, display under the P/F or S/F card:
+'P/F ratio is FiO₂-dependent. Value reflects current FiO₂ setting ([XX]%).
+ Berlin classification requires PEEP ≥ 5 cmH₂O.'
+
+──────────────────────────────────────────────────────────
+WHY THIS IS A STRENGTH FOR THE PAPER, NOT A WEAKNESS
+──────────────────────────────────────────────────────────
+ 
+This is exactly where your tool surpasses MDCalc. MDCalc calculates P/F blindly without any disclaimer on FiO₂-dependence. Your tool, because you thought about the problem before coding, embeds the epistemology of measurement into the interface itself. This is the clinical competency
+encoded in the prompt — a non-clinician would never have thought at this level of granularity.
+ 
+In the paper, this passage becomes a dedicated section in the Discussion: 'Unlike existing calculators, VentiProtect ARDS explicitly accounts for the FiO₂-dependence of the P/F ratio and implements a distinct S/F pathway with corrected thresholds when arterial blood gas is unavailable. This design choice reflects a clinical judgment that transparency about measurement limitations is preferable to false precision — a judgment that can only be encoded by a clinician who understands the physiology.'
+ 
+This is your central argument on physician autonomy, illustrated by a concrete example in the code.
+ 
+Here is the amended Block 4 for the prompt:
+ 
+// === OXYGENATION INDEX — DUAL PATHWAY ===
+// PATH A: P/F RATIO (gold standard — requires ABG)
+// ARDS Definition Task Force. Berlin Definition.
+// JAMA. 2012;307(23):2526-2533.
+// Berlin classification requires PEEP ≥ 5 cmH₂O
+If PaO2 available:
+  PF = PaO2 / (FiO2 / 100)
+  Classification: Mild 200-300 / Moderate 100-200 / Severe <100
+ 
+// PATH B: S/F RATIO (non-invasive surrogate — SpO2 only)
+// Rice TW et al. Chest. 2007;132(2):410-417.
+// Brown SM et al. Chest. 2016;150(2):307-313.
+If PaO2 absent and SpO2 available:
+  SF = SpO2 / (FiO2 / 100)
+  Classification (corrected thresholds):
+    SF < 146   → Severe ARDS equivalent   (P/F < 100)
+    SF 146-236 → Moderate ARDS equivalent (P/F 100-200)
+    SF 236-296 → Mild ARDS equivalent     (P/F 200-300)
+  Display: '[SF value] — [severity] (SpO2-based. ABG recommended)'
+ 
+// DISCLAIMER — display under oxygenation card regardless of path:
+// 'P/F ratio is FiO2-dependent. Current FiO2: [XX]%.
+//  Classification requires PEEP ≥ 5 cmH₂O.'
+ 
+Shall we integrate this into the final prompt?
+Sacha Rozencwajg
+yes
+Just one thing, the definition of DP = Pplat - PEEP is also VT / CRS (compliance of the respiratory system). do you see where I’m heading?
+Claude
+Yes, exactly — and this is an important physiological nuance.
+ 
+DP = Pplat − PEEP is the measured definition in clinical practice, from the pressures
+displayed by the ventilator on a passive patient during inspiratory occlusion.
+ 
+DP = VT / CRS is the physical definition, which follows directly from the law of elasticity
+applied to the respiratory system: driving pressure is the ratio of tidal volume to respiratory system compliance (compliance = ΔV/ΔP, so ΔP = ΔV/C).
+ 
+The two are algebraically equivalent — two ways of expressing the same reality. This is precisely why Amato et al. in their NEJM 2015 paper proposed driving pressure as the best proxy for pulmonary stress: because DP = VT / CRS implicitly normalises VT by the functional lung size (represented by CRS). A VT of 6 mL/kg PBW can give a very high DP if CRS is collapsed (baby lung in severe ARDS) — this is the whole message of Amato.
+ 
+For your tool and manuscript, the formula Pplat − PEEP is the right one to implement because it's what's available at the bedside without additional calculation. The VT/CRS formulation is useful in the Discussion to explain why DP is superior to VT/PBW alone as a mortality predictor — this is exactly the argument of PROSEVA and Amato.
+ 
+You could also mention this equivalence — it shows the pathophysiological depth of your specification.
+Sacha Rozencwajg
+I wonder if we couldn't also display compliance in our app? pro/con?
+Claude
+Good intuition. Here is the honest analysis.
+ 
+FOR:
+Physiologically coherent — if you display DP = Pplat − PEEP, displaying CRS = VT / DP right below closes the loop — the physician instantly sees the three members of the equation and understands why DP is what it is. A CRS of 25 mL/cmH₂O with a DP of 18 tells a very different story from a CRS of 55 mL/cmH₂O with the same DP.
+ 
+Dynamic severity indicator — CRS follows ARDS evolution in real time — it is one of the markers of response to prone positioning and paralysis. Displaying it reinforces the 'continuous monitoring tool' argument, not just 'admission calculator'.
+ 
+Zero cost on the prompt side — trivial formula: CRS (mL/cmH₂O) = VT (mL) / DP (cmH₂O). All variables already in the app. It's one line of code.
+ 
+Enriches Table 2 of the manuscript with a sixth formula that further illustrates the pathophysiological coherence of your specification.
+ 
+AGAINST (one point, but real): interpretation is tricky.
+The CRS calculated here is total respiratory system compliance (lung + chest wall), not pulmonary compliance alone. In ARDS, the chest wall can be very abnormal — morbid obesity, pleural effusions, intra-abdominal hypertension — and total CRS then massively underestimates true pulmonary compliance.
+ 
+Easily managed with a disclaimer in the interface: 'CRS reflects total respiratory system compliance (lung + chest wall).  Interpret with caution in obesity, pleural effusion, or elevated intra-abdominal pressure.'
+ 
+MY VERDICT: Add it, with the disclaimer. Good with this ?
+Sacha Rozencwajg
+yes IF AND ONLY IF you cite ONE publication that supports this formula.
+Claude
+Good methodological instinct. Let's search first.
+ 
+[Literature searched]
+ 
+The answer is clear and the reference is specific.
+ 
+The formula CRS = VT / DP comes directly from Amato et al., NEJM 2015 — the same reference you already cite for driving pressure. Amato et al. explicitly state that ΔP = VT / CRS, where CRS reflects the functional size of the lung during disease, and that this relationship can be routinely calculated at the bedside as plateau pressure minus PEEP. It is therefore not a new formula — it is an algebraic rearrangement of the same equation.
+ 
+There is therefore NO additional reference to add. Reference [7] Amato which you already cite covers both.
+ 
+WHAT I WOULD WRITE AND WHERE:
+ 
+In Block 4 of the prompt, right after the driving pressure formula:
+// === RESPIRATORY SYSTEM COMPLIANCE (CRS) ===
+// Algebraic rearrangement of ΔP = VT / CRS
+// Same source: Amato MB et al. NEJM 2015 [7]
+CRS (mL/cmH₂O) = Vt_mL / DP
+// Represents functional lung size ('baby lung').
+// DISCLAIMER — display under CRS card:
+// 'Total respiratory system compliance (lung + chest wall).
+//  Interpret with caution in obesity, pleural effusion,
+//  or elevated intra-abdominal pressure.'
+ 
+In Block 5 (alert thresholds), after Driving Pressure:
+CRS:
+  > 40 mL/cmH₂O  → REDUCED (mild-moderate ARDS range)
+  25-40           → SEVERELY REDUCED (moderate-severe ARDS)
+  < 25 mL/cmH₂O  → CRITICAL ('baby lung')
+ 
+Shall we implement?
+Sacha Rozencwajg
+OK.
