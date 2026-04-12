@@ -1,0 +1,77 @@
+# PROMPT — VentiProtect ARDS v1.0
+# Author    : Sacha Rozencwajg, MD
+#             Anesthesiologist-Intensivist
+#             Hôpital Marie Lannelongue / GH Paris Saint-Joseph
+#             INSERM U1358 — Université Paris-Saclay
+# Model     : Claude Opus 4.6 via Antigravity
+# Session   : [Antigravity automatic timestamp]
+# Purpose   : Academic documentation — live vibe coding session reproduced in full without post-hoc modification
+ 
+[BLOCK 1] ROLE AND OBJECTIVE
+You are an expert full-stack developer specializing in clinical web interfaces. Build a local, single-page web application with no backend, running entirely in the browser (single HTML file with inline CSS and JS). 
+Application name: VentiProtect ARDS
+Objective: a real-time active titration assistant for lung-protective ventilation in medical ARDS at ICU admission. No installation. No server. No data transmission of any kind.
+ 
+[BLOCK 2] TARGET USER AND MOMENT OF USE
+User: ICU attending physician or senior resident.
+Precise moment: the first 30 minutes of admission of a patient with ARDS, during initial ventilator setup.
+ 
+[BLOCK 3] INPUT DATA
+Patient: Height (cm), Biological sex (M/F), Actual body weight (reference only, NEVER for Vt)
+Oxygenation: FiO₂ (%), PaO₂ (PATH A), SpO₂ (PATH B — only if PaO₂ absent)
+Ventilator: RR, Vt (mL), Pplat (cmH₂O), PEEP (cmH₂O)
+All inputs → immediate recalculation (oninput)
+ 
+[BLOCK 4] FORMULAS — IMPLEMENT EXACTLY AS SPECIFIED
+PBW_male   = 50   + 0.91 × (height_cm − 152.4)   // Devine 1974
+PBW_female = 45.5 + 0.91 × (height_cm − 152.4)
+DP = Pplat − PEEP           // Amato NEJM 2015
+CRS = Vt_mL / DP            // Amato NEJM 2015 (algebraic rearrangement)
+MP = 0.098 × RR × (Vt_mL/1000) × (Pplat − PEEP/2) // Gattinoni ICM 2016
+
+PATH A: PF = PaO₂/(FiO₂/100)                      // Berlin JAMA 2012
+PATH B: SF = SpO₂/(FiO₂/100), thresholds 146/236/296 // Rice Chest 2007, Brown Chest 2016
+CRS disclaimer: total respiratory system compliance (lung + chest wall)
+P/F disclaimer: FiO₂-dependent; Berlin requires PEEP ≥ 5 cmH₂O
+
+// CRITICAL: Berlin classification boundaries are INCLUSIVE at upper end. P/F ≤ 200 = MODERATE
+ 
+[BLOCK 5] ALERT THRESHOLDS (SAFE/WARNING/DANGER, 300ms animated transitions)
+Vt/PBW: ≤6 SAFE / 6-8 WARNING / >8 DANGER
+Pplat: <28 SAFE / 28-30 WARNING / >30 DANGER
+DP: <13 SAFE / 13-15 WARNING / >15 DANGER
+MP: <17 SAFE / 17-27 WARNING / >27 DANGER
+CRS: >40 REDUCED / 25-40 SEVERELY REDUCED / <25 CRITICAL
+P/F or S/F: Mild (light blue) / Moderate (orange) / Severe (red)
+ 
+// CRITICAL boundary: exactly 17 J/min is WARNING, not SAFE. ≥ 17 = WARNING (inclusive lower bound)
+
+[BLOCK 6] ACTIVE SUGGESTION ENGINE
+Suggestion 1 — DP > 15:
+  Vt_corrected = Vt × (14/DP), verify ≥ 4×PBW
+  '→ Reduce Vt to [XXX] mL to target DP ≤ 14 cmH₂O'
+  If < 4×PBW: '→ Consider: NMB, prone, ECMO referral'
+Suggestion 2 — Vt > 6 mL/kg PBW:
+  Vt_target = 6×PBW, Vt_minimum = 4×PBW
+  '→ Target protective Vt: [XXX] mL, reduction: [ΔVt] mL'
+Suggestion 3 — MP > 17 J/min:
+  RR_max = 17/(0.098 × Vt_L × (Pplat-PEEP/2))
+  Vt_max_mL = [17/(0.098 × RR × (Pplat-PEEP/2))] × 1000
+  '→ Option A: reduce RR to [XX]/min | Option B: reduce Vt to [XXX] mL'
+Suggestion 4 — Severe ARDS (P/F < 100 or S/F < 146):
+  Full-width red banner:
+  '✓ Prone ≥16h/day [PROSEVA — Guérin NEJM 2013]
+   ✓ Early NMB if asynchrony [ACURASYS — Papazian NEJM 2010]
+   ✓ ECMO if P/F < 80 [EOLIA — Combes NEJM 2018]'
+  If S/F pathway: '⚠ Obtain ABG to confirm P/F < 100 before escalating'
+ 
+Priority: DP > MP > Vt/PBW > ARDS severity banner
+ 
+[BLOCK 7] USER INTERFACE
+Dark mode (night ICU use). Two-column layout (40% inputs / 60% results).
+Cards: PBW / Vt/PBW / DP / CRS / MP / P/F (or S/F). Color-coded, 300ms transitions. Action Plan panel. Footer with all references.
+ 
+[BLOCK 8] TECHNICAL CONSTRAINTS
+Single file index.html. Zero CDN. Zero storage. Zero patient data persisted.
+All functions on input. Result in < 50ms. Code comments with full bibliographic references.
+Chrome/Firefox/Safari 2022+. Double-click to launch.
