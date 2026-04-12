@@ -1,0 +1,422 @@
+========================================================================
+VentiProtect ARDS — Formula Verification Report
+Run: 2026-04-12 15:15:42
+========================================================================
+
+✓  S01 — M 175cm Vt=440mL
+   
+   14/14 checks passed
+
+✓  S02 — M 175cm Vt=550mL
+   
+   14/14 checks passed
+
+✓  S03 — F 162cm Vt=360mL
+   
+   14/14 checks passed
+
+✓  S04 — M 170cm Vt=390mL
+   
+   14/14 checks passed
+
+✓  S05 — F 155cm Vt=320mL
+   
+   14/14 checks passed
+
+✓  S06 — M 180cm Vt=450mL
+   
+   14/14 checks passed
+
+✓  S07 — F 168cm Vt=380mL
+   
+   14/14 checks passed
+
+✓  S08 — M 172cm Vt=400mL
+   
+   14/14 checks passed
+
+✓  S09 — F 165cm Vt=330mL
+   
+   14/14 checks passed
+
+✓  S10 — M 195cm Vt=600mL
+   
+   14/14 checks passed
+
+✓  S11 — M 151cm Vt=399mL
+   
+   14/14 checks passed
+
+✓  S12 — M 163cm Vt=299mL
+   
+   14/14 checks passed
+
+✓  S13 — M 160cm Vt=487mL
+   
+   14/14 checks passed
+
+✓  S14 — F 188cm Vt=562mL
+   
+   14/14 checks passed
+
+✓  S15 — F 190cm Vt=774mL
+   
+   14/14 checks passed
+
+✓  S16 — M 164cm Vt=288mL
+   
+   14/14 checks passed
+
+✓  S17 — M 188cm Vt=653mL
+   
+   14/14 checks passed
+
+✓  S18 — M 164cm Vt=340mL
+   
+   14/14 checks passed
+
+✓  S19 — F 175cm Vt=571mL
+   
+   14/14 checks passed
+
+✓  S20 — F 173cm Vt=385mL
+   
+   14/14 checks passed
+
+✓  S21 — M 193cm Vt=599mL
+   
+   14/14 checks passed
+
+✓  S22 — M 193cm Vt=815mL
+   
+   14/14 checks passed
+
+✓  S23 — F 182cm Vt=363mL
+   
+   14/14 checks passed
+
+✓  S24 — M 184cm Vt=772mL
+   
+   14/14 checks passed
+
+✓  S25 — F 165cm Vt=255mL
+   
+   14/14 checks passed
+
+✓  S26 — F 185cm Vt=341mL
+   
+   14/14 checks passed
+
+✓  S27 — F 192cm Vt=688mL
+   
+   14/14 checks passed
+
+✓  S28 — M 187cm Vt=327mL
+   
+   14/14 checks passed
+
+✓  S29 — M 182cm Vt=351mL
+   
+   14/14 checks passed
+
+✓  S30 — F 176cm Vt=281mL
+   
+   14/14 checks passed
+
+✓  S31 — M 153cm Vt=358mL
+   
+   14/14 checks passed
+
+✓  S32 — F 179cm Vt=401mL
+   
+   14/14 checks passed
+
+✓  S33 — M 160cm Vt=383mL
+   
+   14/14 checks passed
+
+✓  S34 — F 168cm Vt=421mL
+   
+   14/14 checks passed
+
+✓  S35 — M 170cm Vt=271mL
+   
+   14/14 checks passed
+
+✓  S36 — M 188cm Vt=441mL
+   
+   14/14 checks passed
+
+✓  S37 — F 192cm Vt=727mL
+   
+   14/14 checks passed
+
+✓  S38 — F 179cm Vt=515mL
+   
+   14/14 checks passed
+
+✓  S39 — M 172cm Vt=391mL
+   
+   14/14 checks passed
+
+✓  S40 — M 192cm Vt=710mL
+   
+   14/14 checks passed
+
+✓  S41 — M 167cm Vt=437mL
+   
+   14/14 checks passed
+
+✓  S42 — M 155cm Vt=448mL
+   
+   14/14 checks passed
+
+✓  S43 — F 185cm Vt=644mL
+   
+   14/14 checks passed
+
+✓  S44 — M 177cm Vt=296mL
+   
+   14/14 checks passed
+
+✓  S45 — F 189cm Vt=621mL
+   
+   14/14 checks passed
+
+✓  S46 — F 192cm Vt=777mL
+   
+   14/14 checks passed
+
+✓  S47 — F 172cm Vt=458mL
+   
+   14/14 checks passed
+
+✓  S48 — F 172cm Vt=556mL
+   
+   14/14 checks passed
+
+✓  S49 — F 152cm Vt=234mL
+   
+   14/14 checks passed
+
+✓  S50 — M 166cm Vt=338mL
+   
+   14/14 checks passed
+
+✓  S51 — F 189cm Vt=551mL
+   
+   14/14 checks passed
+
+✓  S52 — F 185cm Vt=330mL
+   
+   14/14 checks passed
+
+✓  S53 — M 177cm Vt=653mL
+   
+   14/14 checks passed
+
+✓  S54 — M 192cm Vt=393mL
+   
+   14/14 checks passed
+
+✓  S55 — M 162cm Vt=238mL
+   
+   14/14 checks passed
+
+✓  S56 — F 181cm Vt=455mL
+   
+   14/14 checks passed
+
+✓  S57 — F 153cm Vt=374mL
+   
+   14/14 checks passed
+
+✓  S58 — F 189cm Vt=767mL
+   
+   14/14 checks passed
+
+✓  S59 — M 190cm Vt=602mL
+   
+   14/14 checks passed
+
+✓  S60 — M 167cm Vt=410mL
+   
+   14/14 checks passed
+
+✓  S61 — M 176cm Vt=464mL
+   
+   14/14 checks passed
+
+✓  S62 — M 186cm Vt=541mL
+   
+   14/14 checks passed
+
+✓  S63 — F 177cm Vt=410mL
+   
+   14/14 checks passed
+
+✓  S64 — M 175cm Vt=629mL
+   
+   14/14 checks passed
+
+✓  S65 — F 174cm Vt=412mL
+   
+   14/14 checks passed
+
+✓  S66 — M 180cm Vt=413mL
+   
+   14/14 checks passed
+
+✓  S67 — M 162cm Vt=308mL
+   
+   14/14 checks passed
+
+✓  S68 — F 173cm Vt=335mL
+   
+   14/14 checks passed
+
+✓  S69 — F 186cm Vt=743mL
+   
+   14/14 checks passed
+
+✓  S70 — F 193cm Vt=784mL
+   
+   14/14 checks passed
+
+✓  S71 — F 150cm Vt=313mL
+   
+   14/14 checks passed
+
+✓  S72 — F 189cm Vt=744mL
+   
+   14/14 checks passed
+
+✓  S73 — M 167cm Vt=403mL
+   
+   14/14 checks passed
+
+✓  S74 — M 181cm Vt=358mL
+   
+   14/14 checks passed
+
+✓  S75 — F 181cm Vt=672mL
+   
+   14/14 checks passed
+
+✓  S76 — M 175cm Vt=572mL
+   
+   14/14 checks passed
+
+✓  S77 — F 172cm Vt=547mL
+   
+   14/14 checks passed
+
+✓  S78 — M 162cm Vt=322mL
+   
+   14/14 checks passed
+
+✓  S79 — F 164cm Vt=351mL
+   
+   14/14 checks passed
+
+✓  S80 — M 190cm Vt=518mL
+   
+   14/14 checks passed
+
+✓  S81 — M 166cm Vt=385mL
+   
+   14/14 checks passed
+
+✓  S82 — F 155cm Vt=203mL
+   
+   14/14 checks passed
+
+✓  S83 — F 169cm Vt=605mL
+   
+   14/14 checks passed
+
+✓  S84 — M 190cm Vt=381mL
+   
+   14/14 checks passed
+
+✓  S85 — F 194cm Vt=723mL
+   
+   14/14 checks passed
+
+✓  S86 — M 166cm Vt=560mL
+   
+   14/14 checks passed
+
+✓  S87 — M 154cm Vt=223mL
+   
+   14/14 checks passed
+
+✓  S88 — F 167cm Vt=520mL
+   
+   14/14 checks passed
+
+✓  S89 — M 155cm Vt=310mL
+   
+   14/14 checks passed
+
+✓  S90 — F 167cm Vt=352mL
+   
+   14/14 checks passed
+
+✓  S91 — M 160cm Vt=377mL
+   
+   14/14 checks passed
+
+✓  S92 — F 157cm Vt=363mL
+   
+   14/14 checks passed
+
+✓  S93 — F 190cm Vt=569mL
+   
+   14/14 checks passed
+
+✓  S94 — F 157cm Vt=295mL
+   
+   14/14 checks passed
+
+✓  S95 — M 179cm Vt=393mL
+   
+   14/14 checks passed
+
+✓  S96 — F 165cm Vt=389mL
+   
+   14/14 checks passed
+
+✓  S97 — F 176cm Vt=496mL
+   
+   14/14 checks passed
+
+✓  S98 — F 184cm Vt=484mL
+   
+   14/14 checks passed
+
+✓  S99 — M 186cm Vt=512mL
+   
+   14/14 checks passed
+
+✓  S100 — M 181cm Vt=323mL
+   
+   14/14 checks passed
+
+────────────────────────────────────────────────────────────────────────
+SCENARIOS  : 100/100 passed
+CHECKS     : 1400/1400 passed
+
+RESULT: ALL TESTS PASSED
+Formula accuracy verified across 100 scenarios, 1400 individual checks.
+No computational errors identified.
+Tolerance: 1.0% relative / 0.01 absolute
+
+References
+[1] Devine BJ. Drug Intell Clin Pharm. 1974;8:650-6.
+[2] Amato MB et al. N Engl J Med. 2015;372(8):747-55.
+[3] Gattinoni L et al. Intensive Care Med. 2016;42(10):1567-75.
+[4] ARDS Definition Task Force. JAMA. 2012;307(23):2526-33.
+[5] Rice TW et al. Chest. 2007;132(2):410-7.
+[6] Brown SM et al. Chest. 2016;150(2):307-13.
+========================================================================
