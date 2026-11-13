@@ -2,45 +2,87 @@
 
 **Lung-Protective Ventilation Titration Assistant**
 
-VentiProtect ARDS is a real-time, active titration assistant designed to optimize lung-protective ventilation for patients with medical Acute Respiratory Distress Syndrome (ARDS) at ICU admission. 
+VentiProtect ARDS is a single-page calculator for lung-protective ventilation in medical Acute Respiratory Distress Syndrome (ARDS). It was built as a proof of concept for physician prompt engineering and is described in:
 
-## Features
+> Rozencwajg S. VentiProtect ARDS, vibe coding lung protection: a five-minute clinician-built ventilator tool as proof-of-concept for physician prompt engineering. *Anaesth Crit Care Pain Med* 2026:101934. [doi:10.1016/j.accpm.2026.101934](https://doi.org/10.1016/j.accpm.2026.101934)
 
-- **Real-Time Calculation**: Dynamic computation of clinical parameters instantly as you type.
-- **Lung-Protective Targets**: Computes Predicted Body Weight (PBW) and relative Tidal Volume (Vt/PBW) to ensure adherence to protective ventilation strategies (≤ 6 mL/kg PBW).
-- **ARDS Severity Stratification**: Evaluates oxygenation parameters (P/F or S/F ratio) to classify ARDS severity and respiratory system compliance (CRS).
-- **Actionable Alerts**: Generates clear visual alerts for protective thresholds (Safe, Warning, Danger) and suggests action plans (e.g., prone positioning, NMBA, ECMO considerations).
-- **Privacy-First & Offline-Capable**: Built as a single-file, zero-dependency HTML application. Absolutely **no patient data is persisted, stored, or transmitted**. The tool is fully functional offline directly at the bedside.
+**Use it online:** https://www.sacha-rozencwajg.fr/ventiprotect/
 
-## Clinical Parameters Evaluated
+![VentiProtect ARDS v1.1 with a simulated severe ARDS case](web/screenshot.png)
 
-- **Patient Metrics**: Height, Biological Sex, Actual Body Weight
-- **Oxygenation**: FiO₂, PaO₂ (ABG gold standard), SpO₂ (non-invasive)
-- **Ventilator Settings**: Respiratory Rate (RR), Tidal Volume (Vt), Plateau Pressure (Pplat), PEEP
+## Two versions
 
-## Usage
+| Version | File | What it is |
+|---|---|---|
+| **v1.1** | [`web/index.html`](web/index.html) | The version to use. Corrected formulas, input checks, English and French, works on a phone. |
+| **v1.0** | [`app/index.html`](app/index.html) | The version described in the article, exactly as generated. Kept unchanged for reproducibility. Do not edit it. |
 
-Simply open the `index.html` file in any modern web browser (desktop, tablet, or smartphone). No installation, application server, or internet connection is required.
+Both are a single HTML file with no dependency. Open the file in any browser: no installation, no server, no internet connection.
 
-## References
+## What it computes
 
-This decision support tool is grounded in established critical care literature and guidelines, including:
-- Devine GJ et al. *Clin Pharmacokinet* 1974 (Predicted Body Weight)
-- ARDS Definition Task Force (Berlin Definition). *JAMA* 2012
-- Amato MB et al. *NEJM* 2015 (Driving Pressure)
-- Gattinoni L et al. *ICM* 2016 (Mechanical Power)
-- Rice TW et al. *Chest* 2007 / Brown SM et al. *Chest* 2016 (SpO₂/FiO₂ ratio)
-- Guérin C et al. *NEJM* 2013 (PROSEVA Trial)
-- Papazian L et al. *NEJM* 2010 (ACURASYS Trial)
-- Combes A et al. *NEJM* 2018 (EOLIA Trial)
+- **Predicted body weight** and **tidal volume per kg** of predicted body weight (target ≤ 6 mL/kg)
+- **Plateau pressure**, **driving pressure** and **respiratory system compliance**
+- **Mechanical power**
+- **Oxygenation**: P/F ratio from PaO₂, or S/F ratio from SpO₂ when no blood gas is entered
+- An **action plan** with computed corrections (tidal volume or respiratory rate to reach each target) and a reminder of the options to discuss in severe ARDS
+
+Formulas, thresholds and references are listed in the page itself, under "About this tool".
+
+## What changed in v1.1
+
+- **Mechanical power** uses the published simplified equation, `0.098 × RR × Vt × (Ppeak − ½ × (Pplat − PEEP))`, which needs the peak pressure. v1.0 computed `0.098 × RR × Vt × (Pplat − PEEP/2)`.
+- **S/F thresholds** are 148, 235 and 315 (Rice et al., *Chest* 2007), and the ratio is only interpreted for SpO₂ ≤ 97%. v1.0 used 146, 236 and 296.
+- **Plateau pressure** has its own card and alert.
+- **Input checks.** Values outside the accepted ranges and inconsistent pressures are reported as errors, and nothing is computed from them. FiO₂ no longer has a default value.
+- No Berlin class is shown when PEEP is below 5 cmH₂O.
+- The "all parameters protective" message only appears when every ventilator input is present and every alert is green.
+- Suggested values are rounded towards the protective side.
+- Height in cm or inches, English and French, light and dark themes, results summary on small screens.
+- No web font: the page makes no network request, and a content security policy enforces it.
+
+## Privacy
+
+Everything is computed in the browser. Nothing is stored, nothing is sent, and there is no analytics. No patient-identifying data is needed.
+
+## Repository layout
+
+| Path | Content |
+|---|---|
+| `web/index.html` | v1.1, the current version |
+| `app/index.html` | v1.0, the published version (frozen) |
+| `supplementary/` | Pre-prompt reasoning transcript and final prompt used to generate v1.0 |
+| `tests/test_engine.mjs` | v1.1 tests. They load the calculation code straight from `web/index.html` and run it. |
+| `tests/test_ventiprotect.py` | v1.0 verification suite described in the article (100 scenarios, 1,400 checks) |
+| `tests/test_report_100.txt` | Report of the v1.0 suite |
+
+## Running the tests
+
+```bash
+node --test tests/test_engine.mjs
+```
+
+```bash
+python3 tests/test_ventiprotect.py
+```
+
+The first command needs Node.js 18 or later and nothing else. It also checks that `app/index.html` is still the published file, byte for byte.
+
+## Changing v1.1
+
+The calculation code lives in one block of `web/index.html` (`<script id="vp-engine">`), separate from the interface. Thresholds are defined once, at the top of that block. After any change, run the tests.
 
 ## Author
 
 **Sacha Rozencwajg, MD**  
 Anesthesiologist-Intensivist  
 Hôpital Marie-Lannelongue / GH Paris Saint-Joseph  
-INSERM U1358 — Université Paris-Saclay  
+INSERM U1358, Université Paris-Saclay
+
+## Licence
+
+MIT. Free to reuse and adapt.
 
 ---
 
-**Disclaimer:** This software is a clinical decision support tool and **does not replace expert clinical judgment**. Always evaluate patients individually according to local protocols.
+**Disclaimer:** VentiProtect ARDS is an educational and research tool. It is not a medical device and **does not replace expert clinical judgment**. Always assess patients individually and follow local protocols.
