@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""
 VentiProtect ARDS — Independent Formula Verification Test Suite
 ================================================================
 Author  : Sacha Rozencwajg, MD, PhD
